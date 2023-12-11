@@ -11,7 +11,7 @@ class Department(models.Model):
         verbose_name_plural = "Подразделения"
 
     id_department = models.IntegerField(primary_key=True, verbose_name="ID подразделения")
-    department_name = models.TextField(verbose_name="Наименование подразделения")
+    department_name = models.CharField(verbose_name="Наименование подразделения")
 
     def __str__(self) -> str: 
         return f'{self.id_department} {self.department_name}'
@@ -70,7 +70,7 @@ class Employee(models.Model):
         {self.gender} {self.phone_number} {self.date_employment} {self.date_dismissal} {self.position} {self.id_department}'''
 
 def status_validator(order_status):
-    if order_status not in ["open", "closed", "in progress", "need info"]:
+    if order_status not in ["Открыта", "На рассмотрении", "В работе"]:
         raise ValidationError(
             gettext_lazy('%(order_status)s is wrong order status'),
             params={'order_status': order_status},
@@ -83,7 +83,7 @@ class Trud(models.Model):
         verbose_name_plural="Трудоустройство"
 
     id_order=models.IntegerField(primary_key=True, verbose_name="ID заявки")
-    order_status=models.TextField(verbose_name="Статус заявки")
+    order_status=models.CharField(verbose_name="Статус заявки\n(Открыта, Закрыта, На рассмотрении)",validators=[status_validator])
     id_employee=models.ForeignKey(Employee, verbose_name="ID Сотрудника",on_delete=models.RESTRICT)
     id_department=models.ForeignKey(Department, verbose_name="ID Подразделения", on_delete=models.RESTRICT)
 
